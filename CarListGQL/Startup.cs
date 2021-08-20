@@ -18,6 +18,7 @@ namespace CarListGQL
 {
     public class Startup
     {
+        private readonly string AllowedOrigin = "allowedOrigin";
         public IConfiguration Configuration {get;}
 
         public Startup(IConfiguration configuration)
@@ -41,6 +42,11 @@ namespace CarListGQL
                         .AddMutationType<Mutation>()
                         .AddFiltering()
                         .AddSorting();
+            services.AddCors(option => {
+                option.AddPolicy("allowedOrigin",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+                    );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +56,7 @@ namespace CarListGQL
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(AllowedOrigin);
 
             app.UseRouting();
 
