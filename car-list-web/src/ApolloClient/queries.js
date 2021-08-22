@@ -6,16 +6,22 @@ export const GET_CARS = gql`
     {
         id
         bastidor
+        modelo
+        matricula
+        fechaEntrega
     }
   }
 `;
 
-const GET_CAR = gql`
+export const GET_CAR = gql`
   query GetCar($id: int!) {
     datas(where: {id: {eq: $id} })
     {
         id
         bastidor
+        modelo
+        matricula
+        fechaEntrega
     }
   }
 `;
