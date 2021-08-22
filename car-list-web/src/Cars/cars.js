@@ -23,7 +23,12 @@ export function Cars() {
           key="action"
           render={(id) => (
             <Space size="middle">
-              <Link to={`/edit/${id}`}>Abrir detalle</Link>
+              <Link to={{
+                pathname: `/edit/${id}`,
+                state: {
+                  car: data.datas.find(x => x.id === Number(id))
+                },
+              }}>Abrir detalle</Link>
               <a>Borrar</a>
             </Space>
           )}

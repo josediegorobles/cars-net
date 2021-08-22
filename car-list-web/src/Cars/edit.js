@@ -4,14 +4,17 @@ import {ADD_CAR, EDIT_CAR} from '../ApolloClient/mutations'
 import { useMutation, useQuery } from '@apollo/client';
 
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 
 export function Edit(props) {
     const { id } = props.match.params;
-    const { loading, error, data } = useQuery(GET_CARS);
+    var notCar = false;
+    if(id==null)
+      notCar = true;
+    const { car } = useLocation();
+    console.log(car);
     const {addCar} = useMutation(ADD_CAR);
     const {editCar} = useMutation(EDIT_CAR);
-    if (loading) return 'Loading...';
-    if (error) return `Error! ${error.message}`;
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -24,12 +27,6 @@ export function Edit(props) {
       const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
-    
-    const car = data.datas.find(x => x.id === Number(id));
-    var notCar = false;
-    if(id==null)
-      notCar = true;
-    console.log(notCar);
 
   return (
       <Form 
