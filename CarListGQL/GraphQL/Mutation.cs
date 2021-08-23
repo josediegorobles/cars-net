@@ -4,6 +4,7 @@ using HotChocolate.Data;
 using CarListGQL.Data;
 using CarListGQL.GraphQL.DataCar;
 using CarListGQL.Models;
+using System;
 
 namespace CarListGQL.GraphQL
 {

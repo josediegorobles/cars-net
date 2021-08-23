@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CarListGQL.Data;
 using CarListGQL.GraphQL;
+using Microsoft.Extensions.Logging;
 
 namespace CarListGQL
 {
@@ -41,7 +42,11 @@ namespace CarListGQL
                         .AddProjections()
                         .AddMutationType<Mutation>()
                         .AddFiltering()
-                        .AddSorting();
+                        .AddSorting()
+                        .AddDiagnosticEventListener(sp =>
+              new ConsoleQueryLogger(
+                sp.GetApplicationService<ILogger<ConsoleQueryLogger>>()
+              ));
             services.AddCors(option => {
                 option.AddPolicy("allowedOrigin",
                     builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()

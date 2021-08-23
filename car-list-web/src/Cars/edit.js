@@ -1,27 +1,68 @@
-import { Form, Input, Button } from 'antd';
-import {GET_CARS} from '../ApolloClient/queries'
-import {ADD_CAR, EDIT_CAR} from '../ApolloClient/mutations'
-import { useMutation, useQuery } from '@apollo/client';
+import { Layout, Form, Input, Button } from 'antd';
+import { useLocation, useHistory } from 'react-router-dom';
+const { Header, Content, Footer } = Layout;
 
-import React from 'react'
-import { useLocation } from 'react-router-dom';
+export function Edit() {
+    const history = useHistory();
+    const axios = require('axios');
+    const { state } = useLocation();
+    var car;
+    if(state)
+      car = state.car;
 
-export function Edit(props) {
-    const { id } = props.match.params;
-    var notCar = false;
-    if(id==null)
-      notCar = true;
-    const { car } = useLocation();
-    console.log(car);
-    const {addCar} = useMutation(ADD_CAR);
-    const {editCar} = useMutation(EDIT_CAR);
+
+    
 
     const onFinish = (values) => {
         console.log('Success:', values);
-        if(notCar) 
-            addCar({variables: {car: values }});
-        else
-            editCar({variables: {car: values }});
+
+        if(!car) {
+            axios({
+              url: 'http://localhost:5000/graphql',
+              method: 'post',
+              data: {
+               query: `mutation{
+                addCar(input: { bastidor: "${values.bastidor}", 
+                , modelo: "${values.modelo}",
+                matricula: "${values.matricula}", fechaEntrega: "${values.fechaEntrega}" }) {
+                  data {
+                    id
+                  }
+                }
+               }`
+              }
+             })
+              .then(res => {
+               console.log(res.data);
+               history.push('/');
+              })
+              .catch(err => {
+               console.log(err.message);
+              });
+        } else {
+          axios({
+            url: 'http://localhost:5000/graphql',
+            method: 'post',
+            data: {
+             query: `mutation{
+              editCar(input: {id: ${car.id}, bastidor: "${values.bastidor}", 
+              , modelo: "${values.modelo}",
+              matricula: "${values.matricula}", fechaEntrega: "${values.fechaEntrega}" }) {
+                data {
+                  id
+                }
+              }
+             }`
+            }
+           })
+            .then(res => {
+             console.log(res.data);
+             history.push('/');
+            })
+            .catch(err => {
+             console.log(err.message);
+            });
+        }
       };
     
       const onFinishFailed = (errorInfo) => {
@@ -29,80 +70,92 @@ export function Edit(props) {
       };
 
   return (
-      <Form 
-      name="basic"
-      labelCol={{
-        span: 8,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      initialValues={car}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <Form.Item
-        label="Bastidor"
-        name="bastidor"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+    <Layout>
+    <Header>Ventas en Concesionario</Header>
+    <Layout>
+      <Content style={{ padding: '30px 30px' }}>
+        <Form 
+          name="basic"
+          labelCol={{
+            span: 4,
+          }}
+          wrapperCol={{
+            span: 8,
+          }}
+          initialValues={car}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label="Bastidor"
+            name="bastidor"
+            rules={[
+              {
+                required: true,
+                message: 'Introduce el número de bastidor',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
-      <Form.Item
-        label="Modelo"
-        name="modelo"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+          <Form.Item
+            label="Modelo"
+            name="modelo"
+            rules={[
+              {
+                required: true,
+                message: 'Introduce el modelo de coche',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
-      <Form.Item
-        label="Matricula"
-        name="matricula"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+          <Form.Item
+            label="Matricula"
+            name="matricula"
+            rules={[
+              {
+                required: true,
+                message: 'Introduce la matricula',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
-      <Form.Item
-        label="Fecha de entrega"
-        name="fechaEntrega"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+          <Form.Item
+            label="Fecha de entrega"
+            name="fechaEntrega"
+            rules={[
+              {
+                required: true,
+                message: 'Introduce la fecha de entrega',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
-      <Form.Item
-        wrapperCol={{
-          offset: 8,
-          span: 16,
-        }}
-      >
-        <Button type="primary" htmlType="submit">
-          Actualizar
-        </Button>
-      </Form.Item>
-    </Form>
+          <Form.Item
+            wrapperCol={{
+              offset: 2,
+              span: 6,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              { //Check if message failed
+                (car)
+                  ? "Actualizar" 
+                  : "Crear" 
+              }
+            </Button>
+          </Form.Item>
+        </Form>
+            </Content>
+        </Layout>
+        <Footer></Footer>
+      </Layout>
   )
 }

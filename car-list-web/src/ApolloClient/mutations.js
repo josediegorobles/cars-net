@@ -1,16 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const ADD_CAR = gql`
-  mutation AddCar($input: String!) {
+  mutation AddCar($input: AddCarInput!)  {
     addCar(input: $input) {
-      id
-      bastidor
+      data {
+        id
+      }
     }
   }
 `;
 
 export const EDIT_CAR = gql`
-  mutation AddCar($text: String!) {
+  mutation EditCar($input: EditCarInput!) {
     editCar(input: $input) {
       id
       bastidor
@@ -20,10 +21,10 @@ export const EDIT_CAR = gql`
 
 
 export const DELETE_CAR = gql`
-  mutation DeleteCar($text: String!) {
-    addTodo(text: $text) {
+  mutation DeleteCar($input: DeleteCarInput!) {
+    deleteCar(input: $input) {
       id
-      text
+      bastidor
     }
   }
 `;
