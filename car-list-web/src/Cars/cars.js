@@ -2,6 +2,7 @@ import {GET_CARS} from '../ApolloClient/queries'
 import {client} from '../ApolloClient/client'
 import { useQuery } from '@apollo/client';
 import { Layout, Table, Space, Button } from 'antd';
+import { BankOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
@@ -21,7 +22,8 @@ export function Cars() {
 
     return (
       <Layout>
-        <Header></Header>
+        <Header>
+        </Header>
         <Layout>
           <Content style={{ padding: '30px 30px' }}>
             <Table dataSource={data.datas}>

@@ -1,5 +1,6 @@
 import { Layout, Form, Input, Button } from 'antd';
-import { useLocation, useHistory } from 'react-router-dom';
+import { BankOutlined } from '@ant-design/icons';
+import { useLocation, useHistory, Link } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
 
 export function Edit() {
@@ -71,7 +72,10 @@ export function Edit() {
 
   return (
     <Layout>
-    <Header>Ventas en Concesionario</Header>
+    <Header><Link to={`/`}>
+      <Button type="primary" icon={<BankOutlined />} size={'large'} >
+      </Button></Link>
+    </Header>
     <Layout>
       <Content style={{ padding: '30px 30px' }}>
         <Form 
